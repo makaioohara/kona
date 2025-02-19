@@ -1,4 +1,6 @@
-const { Client, IntentsBitField } = require('discord.js');
+require('dotenv').config();
+const { Client, IntentsBitField, REST, Routes } = require('discord.js');
+const { TOKEN, CLIENT_ID } = process.env;
 
 const client = new Client({
     intents: [
@@ -9,40 +11,56 @@ const client = new Client({
     ],
 });
 
+const commands = [
+    {
+        name: 'hello',
+        description: 'Replies with a hello message!',
+    },
+];
+
+const rest = new REST({ version: '10' }).setToken(TOKEN);
+
+async function registerCommands() {
+    try {
+        console.log('Started refreshing global (/) commands.');
+
+        await rest.put(
+            Routes.applicationCommands(CLIENT_ID),
+            { body: commands },
+        );
+
+        console.log('Successfully reloaded global (/) commands.');
+    } catch (error) {
+        console.error('Error registering commands:', error);
+    }
+}
+
+registerCommands();
+
 client.on('ready', (c) => {
     console.log(`${c.user.username} is online!`);
+    client.user.setPresence({
+        status: 'idle',
+        activities: [{
+            name: 'with waifus!',
+        }],
+    });
 });
 
-client.on('messageCreate', async (message) => {
-    if (message.author.bot) return;
+client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isCommand()) return;
 
-    if (message.content.toLowerCase().includes('peakall')) {
-        try {
-            await message.delete();
+    const { commandName } = interaction;
 
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            const foundLinks = message.content.match(urlRegex);
-
-            const attachments = message.attachments.map(att => att.url);
-
-            const targetChannel = await client.channels.fetch('1341118613528252426');
-
-            if (foundLinks && foundLinks.length > 0) {
-                await targetChannel.send(`||${foundLinks[0]}||`);
-            }
-
-            if (attachments.length > 0) {
-                for (const attachment of attachments) {
-                    await targetChannel.send(attachment);
-                }
-            }
-
-        } catch (error) {
-            console.error('Error while deleting or replying:', error);
-        }
+    if (commandName === 'hello') {
+        await interaction.reply('Hello, world!');
     }
 });
 
-client.login(
-    'MTM0MTA5ODk2OTc3Nzk2NzI0NQ.GI6pDY.kgnEW3UJzD5ML6LnwA9N7oOY9f4mJrTofRw81g'
-);
+client.on('error', (error) => {
+    console.error('Bot encountered an error:', error);
+});
+
+client.login(TOKEN).catch((error) => {
+    console.error('Failed to login to Discord:', error);
+});
