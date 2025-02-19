@@ -1,4 +1,14 @@
 {
+  "name": "Kona",
+  "version": "1.0.0",
+  "description": "A Discord bot!",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Makaio Ohara",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
@@ -6,3 +16,4 @@
     "nodemon": "^3.1.9"
   }
 }
+
