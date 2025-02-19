@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { Client, IntentsBitField, REST, Routes } = require('discord.js');
+const alive = require('./alive.js');
 const { TOKEN, CLIENT_ID } = process.env;
 
 const client = new Client({
