@@ -11,10 +11,26 @@ const client = new Client({
     ],
 });
 
+client.on('ready', async () => {
+    console.log(`${client.user.username} is online!`);
+    client.user.setPresence({
+        status: 'idle',
+        activities: [{ name: 'with husbando!' }],
+    });
+
+    // try {
+    //     const guild = await client.guilds.fetch('793063389462134787');
+    //     await guild.commands.set([]);
+    //     console.log('Successfully set guild commands to empty.');
+    // } catch (error) {
+    //     console.error('Error setting guild commands:', error);
+    // }
+});
+
 const commands = [
     {
-        name: 'hello',
-        description: 'Replies with a hello message!',
+        name: 'bump',
+        description: 'Replies with a server bump links!',
     },
 ];
 
@@ -22,13 +38,7 @@ const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 async function registerCommands() {
     try {
-        console.log('Started refreshing global (/) commands.');
-
-        await rest.put(
-            Routes.applicationCommands(CLIENT_ID),
-            { body: commands },
-        );
-
+        await rest.put(Routes.applicationCommands(CLIENT_ID), { body: commands });
         console.log('Successfully reloaded global (/) commands.');
     } catch (error) {
         console.error('Error registering commands:', error);
@@ -37,23 +47,13 @@ async function registerCommands() {
 
 registerCommands();
 
-client.on('ready', (c) => {
-    console.log(`${c.user.username} is online!`);
-    client.user.setPresence({
-        status: 'idle',
-        activities: [{
-            name: 'with waifus!',
-        }],
-    });
-});
-
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
 
     const { commandName } = interaction;
 
-    if (commandName === 'hello') {
-        await interaction.reply('Hello, world!');
+    if (commandName === 'bump') {
+        await interaction.reply('https://discord.me/dashboard\nhttps://discordservers.com/bump/793063389462134787\nhttps://discords.com/servers/793063389462134787/upvote\nhttps://discordbotlist.com/servers/waifuland-bangladesh/upvote');
     }
 });
 
@@ -64,3 +64,5 @@ client.on('error', (error) => {
 client.login(TOKEN).catch((error) => {
     console.error('Failed to login to Discord:', error);
 });
+
+// nodemon
