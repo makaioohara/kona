@@ -1,43 +1,50 @@
-const { client } = require('../../../config.json');
+require('dotenv').config();
+const path = require('path');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v10');
+const { Collection } = require('discord.js');
+const reusable = require('../../utils/reusable');
 
 module.exports = async (client) => {
-  try {
-    const globalCommands = await client.application.commands.fetch();
-
-    const localCommands = require('../../utils/getApplicationCommands')(); 
-
-    for (const localCommand of localCommands) {
-      const { name, description, options } = localCommand;
-
-      const existingCommand = globalCommands.find(
-        (cmd) => cmd.name === name
-      );
-
-      if (existingCommand) {
-        if (localCommand.deleted) {
-          await existingCommand.delete();
-          console.log(`Deleted command "${name}".`);
-          continue;
-        }
-
-      } else {
-        if (localCommand.deleted) {
-          console.log(
-            `Skipping registering command "${name}" as it's set to delete.`
-          );
-          continue;
-        }
-
-        await client.application.commands.create({
-          name,
-          description,
-          options,
-        });
-
-        console.log(`Registered command "${name}."`);
-      }
+    if (!client.commands) {
+        client.commands = new Collection();
     }
-  } catch (error) {
-    console.log(`There was an error: ${error}`);
-  }
+
+    const commands = [];
+    const commandFolders = reusable(path.join(__dirname, '..', '..', 'commands'), true);
+
+    for (const folder of commandFolders) {
+        const commandFiles = reusable(folder);
+        for (const file of commandFiles) {
+            const command = require(file);
+            if (command.name && command.description) {
+                commands.push({ name: command.name, description: command.description });
+                client.commands.set(command.name, command);
+            } else {
+                console.warn(`Skipping ${file}: Missing details!`);
+            }
+        }
+    }
+
+    const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+
+    try {
+        await rest.put(
+            Routes.applicationCommands(client.user.id),
+            { body: commands }
+        );
+        console.log('Successfully registered application commands!');
+    } catch (error) {
+        console.error('Error registering application commands:', error);
+    }
+};
+
+module.exports.clearCommands = async (client, guildId) => {
+    try {
+        const guild = await client.guilds.fetch(guildId);
+        await guild.commands.set([]);
+        console.log('Successfully cleared guild commands!');
+    } catch (error) {
+        console.error('Error clearing commands:', error);
+    }
 };

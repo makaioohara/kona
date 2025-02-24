@@ -3,6 +3,11 @@ const path = require('path');
 module.exports = (directory, foldersOnly = false) => {
     let fileNames = [];
 
+    if (!fs.existsSync(directory)) {
+        console.error(`Directory does not exist: ${directory}`);
+        return fileNames;
+    }
+
     const files = fs.readdirSync(directory, { withFileTypes: true });
 
     for (const file of files) {

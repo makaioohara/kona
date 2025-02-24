@@ -7,7 +7,6 @@ module.exports = async (client, guildId) => {
     } else {
       applicationCommands = await client.application.commands;
     }
-  
-    await applicationCommands.fetch();
+    
     return applicationCommands;
   };
