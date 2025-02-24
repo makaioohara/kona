@@ -6,7 +6,14 @@ module.exports = (client) => {
 
     for (const eventFolder of eventFolders) {
         const eventFiles = reusable(eventFolder);
+
         const eventName = eventFolder.replace(/\\/g, '/').split('/').pop();
-        console.log(eventName);
+        
+        client.on(eventName, async (arg) => {
+            for (const eventFile of eventFiles) {
+                const eventFunction = require(eventFile);
+                await eventFunction(client, arg);
+            }
+        })
     }
 };
