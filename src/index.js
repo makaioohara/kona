@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { Client, IntentsBitField, EmbedBuilder } = require('discord.js');
+const eventHandler = require('./handlers/eventHandler');
 const keepalive = require('../keepalive');
 
 const client = new Client({
@@ -10,6 +11,8 @@ const client = new Client({
         IntentsBitField.Flags.MessageContent,
     ],
 });
+
+eventHandler(client);
 
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
