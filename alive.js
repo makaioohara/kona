@@ -1,11 +1,6 @@
-const express = require('express');
-const app = express();
-const port = 3000;
+const http = require('http');
 
-app.get('/', (req, res) => {
-  res.send('Alive!');
-});
-
-app.listen(port, () => {
-  console.log(`Server is alive on port ${port}!`);
-});
+http.createServer(function (req, res){
+  res.write("Alive!");
+  res.end();
+}).listen(8080);
