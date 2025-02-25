@@ -21,13 +21,9 @@ module.exports = {
         .setColor(botRoleColor)
         .setTitle('Custom emotes!')
         .setDescription(`Use \`?:emojiname:\` in the chat to use emotes listed below!\n\n${emojiList}`)
-        .setFooter({ text: 'This message will disappear in 25 seconds.' });
+        .setFooter({ text: 'Thanks for using these emotes!' });
 
-      const message = await interaction.reply({ embeds: [embed] });
-
-      setTimeout(() => {
-        message.delete().catch(console.error);
-      }, 25000);
+      await interaction.reply({ embeds: [embed] });
 
     } catch (error) {
       console.error(error);
