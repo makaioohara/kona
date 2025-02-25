@@ -1,37 +1,39 @@
-module.exports = async (client, interaction) => {
-    if (!interaction.isChatInputCommand()) return;
+const { Collection } = require('discord.js');
+
+module.exports = async (client, message) => {
+    if (message.author.bot) return;
+    if (message.channel.type === 'dm') return;
+
+    await message.delete();
+    
+    if (!message.channel.nsfw) {
+        message.channel.send('This feature is made to be used in an NSFW channel!');
+        return;
+    };
 
     try {
-      const commandObject = client.commands.get(interaction.commandName);
+        const emojiRegex = /\?:([a-zA-Z0-9_]+):/g;
+        const matches = [...message.content.matchAll(emojiRegex)];
 
-      if (!commandObject) return;
+        const applicationEmojis = await client.application.emojis.fetch();
 
-      if (commandObject.permissionsRequired?.length) {
-        for (const permission of commandObject.permissionsRequired) {
-          if (!interaction.member.permissions.has(permission)) {
-            interaction.reply({
-              content: 'Not enough permissions.',
-              ephemeral: true,
+        if (matches.length > 0) {
+            let emojiMessage = "";
+
+            matches.forEach(match => {
+                const emojiName = match[1];
+                const emoji = applicationEmojis.find(e => e.name === emojiName);
+
+                if (emoji) {
+                    emojiMessage += `${emoji.toString()} `;
+                }
             });
-            return;
-          }
+
+            if (emojiMessage) {
+                message.channel.send(emojiMessage.trim());
+            }
         }
-      }
-
-      if (commandObject.botPermissions?.length) {
-        const bot = interaction.guild.members.me;
-
-        if (!bot.permissions.has(permission)) {
-          interaction.reply({
-            content: "I don't have enough permissions.",
-            ephemeral: true,
-          });
-          return;
-        }
-      }
-
-      await commandObject.callback(client, interaction);
     } catch (error) {
-      console.log(`There was an error running this command: ${error}`);
+        console.log(`Error processing message: ${error}`);
     }
 };
