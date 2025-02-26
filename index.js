@@ -3,6 +3,8 @@ const { Client, IntentsBitField, Collection } = require('discord.js');
 const eventHandler = require('./src/handlers/eventHandler');
 const keepalive = require('./alive');
 
+//npx nodemon
+
 const client = new Client({
     intents: [
         IntentsBitField.Flags.Guilds,
