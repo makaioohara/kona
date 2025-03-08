@@ -11,10 +11,10 @@ module.exports = async (client, message) => {
 
     await message.delete();
 
-    if (!message.channel.nsfw) {
-        message.channel.send('This feature is made to be used in an NSFW channel!');
-        return;
-    }
+    // if (!message.channel.nsfw) {
+    //     message.channel.send('This feature is made to be used in an NSFW channel!');
+    //     return;
+    // }
 
     try {
         const applicationEmojis = await client.application.emojis.fetch();
