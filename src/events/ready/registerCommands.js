@@ -17,7 +17,7 @@ module.exports = async (client) => {
         }
     };
 
-    await clearCommands(client, '793063389462134787');
+    await clearCommands(client, process.env.GUILD_ID);
 
     if (!client.commands) {
         client.commands = new Collection();
