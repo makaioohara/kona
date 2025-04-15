@@ -7,17 +7,17 @@ const reusable = require('../../utils/reusable');
 
 module.exports = async (client) => {
     // Function to clear commands
-    const clearCommands = async (client, guildId) => {
-        try {
-            const guild = await client.guilds.fetch(guildId);
-            await guild.commands.set([]);
-            console.log('Successfully cleared guild commands!');
-        } catch (error) {
-            console.error('Error clearing commands:', error);
-        }
-    };
+    // const clearCommands = async (client, guildId) => {
+    //     try {
+    //         const guild = await client.guilds.fetch(guildId);
+    //         await guild.commands.set([]);
+    //         console.log('Successfully cleared guild commands!');
+    //     } catch (error) {
+    //         console.error('Error clearing commands:', error);
+    //     }
+    // };
 
-    await clearCommands(client, process.env.GUILD_ID);
+    // await clearCommands(client, process.env.GUILD_ID);
 
     if (!client.commands) {
         client.commands = new Collection();

@@ -37,7 +37,7 @@ module.exports = async (client) => {
         }
     };
 
-    sendRandomMessage();
+    // sendRandomMessage();
 
     setInterval(sendRandomMessage, 1000000);
 };

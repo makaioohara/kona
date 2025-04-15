@@ -6,9 +6,6 @@ module.exports = {
   
   callback: async (client, interaction) => {
     try {
-      // if (!interaction.channel.nsfw) {
-      //   return interaction.reply('This command is made to be used in an NSFW channel!');
-      // }
       const applicationEmojis = await client.application.emojis.fetch();
 
       if (applicationEmojis.size === 0) {
