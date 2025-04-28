@@ -14,8 +14,6 @@ const client = new Client({
     ],
 });
 
-client.commands = new Collection();
-
 eventHandler(client);
 
 client.login(process.env.TOKEN).catch((error) => {
