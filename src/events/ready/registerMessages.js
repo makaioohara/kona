@@ -13,6 +13,7 @@ module.exports = async (client) => {
 
             if (messageCommand && typeof messageCommand === 'function') {
                 client.on('messageCreate', async (message) => {
+                    if (message.author.bot) return; 
                     await messageCommand(client, message);
                 });
             } else {

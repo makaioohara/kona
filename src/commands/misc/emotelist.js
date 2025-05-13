@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
-  name: 'emotes',
+  name: 'emotelist',
   description: 'Shows all available emotes for non-nitro users.',
   
   callback: async (client, interaction) => {

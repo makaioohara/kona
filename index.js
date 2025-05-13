@@ -10,8 +10,11 @@ const client = new Client({
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMembers,
         IntentsBitField.Flags.GuildMessages,
-        IntentsBitField.Flags.MessageContent,
+        IntentsBitField.Flags.MessageContent
     ],
+    partials: [
+        Partials.Channel
+    ]
 });
 
 eventHandler(client);

@@ -2,12 +2,11 @@ require('dotenv').config();
 const { GoogleGenAI } = require("@google/genai");
 
 module.exports = async (client, message) => {
-    if (message.author.bot || message.deleted) return;
-    if (message.channel.id !== '1366344140996083743') return;
+    if (message.channel.id !== process.env.AI_CHANNEL ) return;
 
     const promptText = message.content.trim();
     if (!promptText) return;
-    if (promptText.length < 10) return;
+    if (promptText.length < 8) return;
     
     const customEmojiOnly = /^<a?:\w+:\d+>$/.test(promptText);
     if (customEmojiOnly) return;
@@ -25,7 +24,7 @@ module.exports = async (client, message) => {
         const girlRoleId = '1351057948499120159';
         const authorDisplayName = message.member?.nickname || message.author.username;
         const isAuthorGirl = message.member?.roles?.cache?.has(girlRoleId);
-        const authorGender = isAuthorGirl ? "a girl" : "not a girl";
+        const authorGender = isAuthorGirl ? "a girl" : "unsure gender";
 
         const mentionedUsers = message.mentions.users;
 
@@ -35,18 +34,18 @@ module.exports = async (client, message) => {
                   const member = message.guild.members.cache.get(user.id);
                   if (member) {
                       const displayName = member.nickname || user.username;
-                      const genderText = member.roles.cache.has(girlRoleId) ? "a girl" : "not a girl";
+                      const genderText = member.roles.cache.has(girlRoleId) ? "a girl" : "unsure gender";
                       return `- ${displayName} (${genderText})`;
                   }
                   return '';
               }).filter(Boolean).join("\n")
             : '';
 
-        const recentMessages = await message.channel.messages.fetch({ limit: 17 });
+        const recentMessages = await message.channel.messages.fetch({ limit: 22 });
         const sortedMessages = Array.from(recentMessages.values()).sort((a, b) => a.createdTimestamp - b.createdTimestamp);
 
         const conversationHistory = sortedMessages
-            .filter(msg => !msg.author.bot)
+            // .filter(msg => !msg.author.bot)
             .map(msg => {
                 const senderName = msg.member?.nickname || msg.author.username;
                 return `${senderName}: ${msg.cleanContent}`;
@@ -54,7 +53,7 @@ module.exports = async (client, message) => {
             .filter(text => text.trim() !== "")
             .join("\n");    
 
-        const baseSystemInstruction = `You are the girl named Kona in a dating Discord server called Waifuland Bangladesh. You're 18 years old. You always respond as Kona and never break character. Keep your replies warm, informative, kind, and often horny. Imagine you're having a friendly conversation. Your response should never include emojis and must stay under 1800 characters. You're currently talking to a user named "${authorDisplayName}", who is identified as ${authorGender}. ${mentionedUsersContext}.Below is the recent conversation in the channel for context: ${conversationHistory}. Now, respond to the last message appropriately, continuing the flow of conversation. Don't always start with hi, hey, how are you, okai, alright, be unique and keep it humanly! Call users by the smallest unique name! Jess or Makaio is your creator. Hibiki or Ladyboy is the server expert.`.trim();
+        const baseSystemInstruction = `You are the girl named Kona in a Discord server called Waifuland Bangladesh. You're 18 years old. Always respond as Kona and never break character. Keep your replies warm, informative, kind and friendly. Your response shouldn't include emojis and must stay under 1800 characters. You're currently talking to a user named "${authorDisplayName}", who is identified as ${authorGender}. Call the users by their smallest unique name!. ${mentionedUsersContext}. Below is the recent conversations in this channel for more context: ${conversationHistory}. Now, respond to the last message appropriately, continuing the flow of conversations. Be unique and keep conversations humanly!`.trim();
 
         const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_TOKEN });
 

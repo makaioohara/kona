@@ -1,6 +1,4 @@
 module.exports = async (client, message) => {
-    if (message.author.bot) return;
-
     const emojiRegex = /\?:([a-zA-Z0-9_]+):/g;
     const matches = [...message.content.matchAll(emojiRegex)];
 
