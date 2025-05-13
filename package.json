@@ -11,9 +11,11 @@
   "license": "MIT",
   "dependencies": {
     "@google/genai": "^0.8.0",
+    "axios": "^1.9.0",
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "node-fetch": "^2.7.0",
     "nodemon": "^3.1.9"
   }
 }
