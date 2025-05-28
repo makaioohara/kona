@@ -2,7 +2,7 @@ require('dotenv').config();
 const axios = require('axios');
 const { EmbedBuilder } = require('discord.js');
 
-const subreddits = ['AdorableNudes', 'AmateurPorn', 'AsianPorn', 'asshole', 'BangladeshGoneSexy', 'collegesluts', 'Dark_nipples', 'DaughterTraining', 'DesiStree', 'gonewild', 'IndianOwnedWomen', 'LegalTeens', 'LesbianFantasy', 'needysluts', 'OnlyFans101', 'onlyfansgirls101', 'YoungGirlsGoneWild'];
+const subreddits = ['Bangladesh'];
 
 const getRedditAccessToken = async () => {
     const credentials = Buffer.from(`${process.env.REDDIT_CLIENT_ID}:${process.env.REDDIT_CLIENT_SECRET}`).toString('base64');
